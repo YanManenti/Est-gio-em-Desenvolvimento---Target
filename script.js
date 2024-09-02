@@ -4,45 +4,59 @@ const fibonacci = {
   2: 2,
 };
 
+function getValue(index) {
+  return parseInt(fibonacci[Object.keys(fibonacci)[index]]);
+}
+
 function checkFibonacci() {
-  const num = document.getElementById("fibonacciInput").value;
+  const num = parseInt(document.getElementById("fibonacciInput").value);
   if (num === "") {
     setValue("fibonacciOutput", "Digite um número");
     return;
   }
   const lastIndex = Object.keys(fibonacci).length - 1;
-  if (num > fibonacci[lastIndex]) {
-    while (fibonacci[lastIndex] <= num) {
+  let lastValue = getValue(lastIndex);
+  if (num > fibonacci[lastValue]) {
+    while (fibonacci[lastValue] < num) {
       const currentIndex = Object.keys(fibonacci).length - 2;
-      const newIndex = fibonacci[currentIndex] + fibonacci[currentIndex + 1];
+      const newIndex = getValue(currentIndex) + getValue(currentIndex + 1);
       fibonacci[newIndex] = newIndex;
-      lastIndex = newIndex;
+      lastValue = newIndex;
     }
   }
 
   if (fibonacci[num] !== undefined) {
     setValue("fibonacciOutput", "Sim");
+    return;
   }
   setValue("fibonacciOutput", "Não");
 }
 
 function charRepetition() {
-  const str = document.getElementById("repetitionInput").value;
+  const str = document
+    .getElementById("repetitionInput")
+    .value.trim()
+    .toLowerCase();
   if (str === "") {
     setValue("repetitionOutput", "Digite uma string");
     return;
   }
-  str.trim();
-  str.toLowerCase();
-  str.sort();
-  const firstIndex = str.indexOf("a");
+  const sortedStr = sortString(str);
+  const firstIndex = sortedStr.indexOf("a");
   if (firstIndex === -1) {
-    return 0;
+    setValue("repetitionOutput", "Nenhuma letra 'a' encontrada");
   }
-  const lastIndex = str.lastIndexOf("a");
+  const lastIndex = sortedStr.lastIndexOf("a");
   setValue("repetitionOutput", lastIndex - firstIndex + 1);
 }
 
 function setValue(id, value) {
-  document.getElementById(id).setValue(value);
+  document.getElementById(id).value = value;
+}
+
+function sortString(str) {
+  return str
+    .split("")
+    .sort((a, b) => a.localeCompare(b))
+    .join("");
 }
